@@ -16,6 +16,10 @@ class BoxInventoryAPITester:
         """Run a single API test"""
         url = f"{self.api_url}/{endpoint}"
         headers = {'Content-Type': 'application/json'}
+        
+        # Add auth header for non-auth endpoints
+        if self.token and not endpoint.startswith('auth/'):
+            headers['Authorization'] = f'Bearer {self.token}'
 
         self.tests_run += 1
         print(f"\n🔍 Testing {name}...")

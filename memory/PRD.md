@@ -7,12 +7,14 @@ Create an app to track boxes inventory with ability to input daily usage quantit
 - Track: Name, Quantity, Cost per box type
 - Dashboard alerts for low inventory (visual only)
 - Usage trends with charts/graphs
-- Single user (no authentication)
+- Username/password authentication
+- Prediction system for reorder timing
+- Excel export for inventory
 - Simple, easy-to-use UI
 
 ## Architecture
 - **Frontend**: React + Tailwind CSS + Shadcn UI + Recharts
-- **Backend**: FastAPI (Python)
+- **Backend**: FastAPI (Python) with JWT authentication
 - **Database**: MongoDB
 - **Design**: Swiss Industrial aesthetic (sharp edges, high contrast)
 
@@ -23,6 +25,9 @@ Create an app to track boxes inventory with ability to input daily usage quantit
 4. Low stock alerts when quantity <= threshold
 5. Usage trends chart (7/14/30 days)
 6. Usage history table
+7. User authentication (username/password)
+8. Usage-based predictions (days until empty/reorder)
+9. Excel export
 
 ## What's Been Implemented (Feb 14, 2026)
 - ✅ Full CRUD for box types
@@ -34,25 +39,35 @@ Create an app to track boxes inventory with ability to input daily usage quantit
 - ✅ Responsive sidebar navigation
 - ✅ Input validation (backend)
 - ✅ Stock validation when recording usage
+- ✅ JWT username/password authentication
+- ✅ Prediction system (avg daily usage → days until empty/reorder)
+- ✅ Prediction alerts on dashboard and inventory table
+- ✅ Excel export (.xlsx) with full inventory data + predictions
+- ✅ Logout functionality
 
 ## API Endpoints
-- GET/POST /api/boxes - List/Create boxes
+### Auth
+- POST /api/auth/register - Register new user
+- POST /api/auth/login - Login and get JWT token
+- GET /api/auth/me - Get current user info
+
+### Inventory (Protected)
+- GET/POST /api/boxes - List/Create boxes (includes predictions)
 - GET/PUT/DELETE /api/boxes/{id} - Get/Update/Delete box
 - POST /api/usage - Record usage
 - GET /api/usage - Get usage history
 - GET /api/usage/trends - Get daily aggregated trends
 - GET /api/stats - Dashboard statistics
+- GET /api/export/inventory - Download Excel file
 
 ## Next Action Items (P0-P2)
 ### P0 - Critical
 - None currently
 
 ### P1 - High Priority
-- Add "Restock" quick action (increase quantity easily)
-- Export inventory data to CSV
+- Add "Quick Restock" button to easily increase quantities
 
 ### P2 - Future Enhancements
 - Email notifications for low stock
-- Multiple user support with authentication
 - Supplier management
 - Purchase order tracking

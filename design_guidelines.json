@@ -1,0 +1,136 @@
+{
+  "typography": {
+    "headings": {
+      "font_family": "Manrope, sans-serif",
+      "weights": ["600", "800"],
+      "tracking": "tight",
+      "usage": "All page titles, section headers, and metric values."
+    },
+    "body": {
+      "font_family": "Inter, sans-serif",
+      "weights": ["400", "500"],
+      "tracking": "normal",
+      "usage": "Table data, labels, form inputs, and descriptions."
+    },
+    "mono": {
+      "font_family": "JetBrains Mono, monospace",
+      "usage": "SKUs, ID numbers, and technical data."
+    }
+  },
+  "colors": {
+    "palette_name": "Swiss Industrial",
+    "mode": "light",
+    "background": {
+      "default": "#FFFFFF",
+      "subtle": "#F4F4F5",
+      "card": "#FFFFFF"
+    },
+    "foreground": {
+      "default": "#0F172A",
+      "muted": "#64748B",
+      "inverse": "#FFFFFF"
+    },
+    "primary": {
+      "default": "#1E1B4B",
+      "hover": "#312E81",
+      "foreground": "#FFFFFF",
+      "description": "Deep Indigo - Use for primary actions, active states, and brand presence."
+    },
+    "accent": {
+      "default": "#F97316",
+      "hover": "#EA580C",
+      "foreground": "#FFFFFF",
+      "description": "Signal Orange - Use for low stock alerts, warnings, and critical notifications."
+    },
+    "border": {
+      "default": "#E2E8F0",
+      "strong": "#0F172A"
+    },
+    "status": {
+      "success": "#10B981",
+      "warning": "#F59E0B",
+      "error": "#EF4444"
+    }
+  },
+  "visual_enhancers": {
+    "radius": "0px",
+    "shadows": {
+      "card": "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
+      "hover": "4px 4px 0px 0px #000000"
+    },
+    "borders": {
+      "default": "1px solid #E2E8F0",
+      "active": "2px solid #0F172A"
+    },
+    "textures": {
+      "noise": "url('data:image/svg+xml;base64,...')",
+      "cardboard": "Use the cardboard texture image as a subtle overlay (opacity 0.05) on the sidebar or empty states."
+    }
+  },
+  "layout": {
+    "grid_system": "Bento Grid (Mode B - High Density)",
+    "spacing": {
+      "container_padding": "p-6 md:p-12",
+      "element_gap": "gap-6",
+      "internal_padding": "p-6"
+    },
+    "alignment": "Left-aligned text for readability. Right-aligned numbers/currency.",
+    "max_width": "max-w-7xl mx-auto"
+  },
+  "components": {
+    "buttons": {
+      "style": "Sharp edges (rounded-none), bold text, high contrast.",
+      "variants": {
+        "primary": "bg-primary text-primary-foreground hover:bg-primary/90 shadow-[2px_2px_0px_0px_#000000]",
+        "secondary": "bg-white border-2 border-black text-black hover:bg-gray-100 shadow-[2px_2px_0px_0px_#000000]"
+      }
+    },
+    "cards": {
+      "style": "Flat, white background, 1px border-gray-200. No massive shadows. Use 'border-l-4' for status indication."
+    },
+    "inputs": {
+      "style": "bg-gray-50 border-gray-300 focus:border-primary focus:ring-1 focus:ring-primary rounded-none h-12"
+    },
+    "tables": {
+      "style": "Dense, minimal borders. Header: uppercase, text-xs, tracking-wider, text-gray-500. Row hover: bg-gray-50."
+    }
+  },
+  "image_urls": {
+    "textures": [
+      {
+        "url": "https://images.unsplash.com/photo-1696764190824-bcdb5c8278d3?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjY2NzF8MHwxfHNlYXJjaHwxfHxjYXJkYm9hcmQlMjBib3glMjB0ZXh0dXJlfGVufDB8fHx8MTc3MTA1ODQwN3ww&ixlib=rb-4.1.0&q=85",
+        "description": "Cardboard texture for subtle backgrounds or empty states.",
+        "category": "texture"
+      }
+    ],
+    "abstract": [
+      {
+        "url": "https://images.unsplash.com/photo-1769250707038-7cd04e685abe?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDk1ODF8MHwxfHNlYXJjaHwyfHx3YXJlaG91c2UlMjBtaW5pbWFsaXN0JTIwYWJzdHJhY3R8ZW58MHx8fHwxNzcxMDU4NDAyfDA&ixlib=rb-4.1.0&q=85",
+        "description": "Geometric warehouse abstract for login or hero areas.",
+        "category": "hero"
+      }
+    ]
+  },
+  "instructions_to_main_agent": [
+    "Implement a 'Swiss Industrial' aesthetic: strict grids, high contrast, and functional typography.",
+    "Use 'Manrope' for all headings to give a technical feel.",
+    "Use 'Inter' for body text and data tables.",
+    "Primary Action Color is Deep Indigo (#1E1B4B). Alert Color is Signal Orange (#F97316).",
+    "Dashboard Layout: Use a dense Bento grid. Top row for KPIs (Total Boxes, Low Stock). Middle for Usage Chart. Bottom for Recent Activity.",
+    "Inventory List: Create a dense, filterable table. Use color-coded badges for stock levels (Green = Good, Orange = Low, Red = Critical).",
+    "Forms: Use large, clear inputs. This is a utility tool; ease of data entry is paramount.",
+    "Charts: Use Recharts with the defined color palette. Keep them simple (Bar or Line). No 3D charts.",
+    "Do NOT use rounded corners. Set 'rounded-none' or 'rounded-sm' (2px) max. We want a sharp, boxy look.",
+    "Add a 'Dark Mode' toggle, but optimize primarily for a clean, bright Light Mode.",
+    "Use the cardboard texture image subtly (e.g., as a sidebar background pattern with low opacity) to hint at the 'Box' theme without being cheesy."
+  ],
+  "universal_guidelines": [
+    "Avoid generic 'AI slop' designs. Be bold with spacing and contrast.",
+    "Use 2-3x more spacing than typical. 'p-8' is the new 'p-4'.",
+    "Micro-animations are mandatory. Hover states must be clear.",
+    "All interactive elements must have 'data-testid'.",
+    "Use 'sonner' for toasts.",
+    "Do not use 'transition: all'. Animate specific properties.",
+    "Never center-align the main app container."
+  ]
+}

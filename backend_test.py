@@ -272,6 +272,18 @@ def main():
         print("❌ Cannot connect to API, stopping tests")
         return 1
     
+    # Test authentication with test user
+    print("\n🔐 Testing Authentication...")
+    if not tester.test_login("testuser", "test123"):
+        print("❌ Login failed, stopping tests")
+        return 1
+    
+    # Test getting current user
+    tester.test_get_me()
+    
+    # Test protected route without auth
+    tester.test_protected_route_without_auth()
+    
     # Test empty state
     tester.test_get_empty_boxes()
     tester.test_get_dashboard_stats()
@@ -310,6 +322,15 @@ def main():
         "usage",
         400,  # Should return 400 for insufficient stock
         data={"box_type_id": box3_id, "quantity_used": 100}  # More than available
+    )
+    
+    # Test Excel export
+    print("\n📊 Testing Excel Export...")
+    tester.run_test(
+        "Export Inventory Excel",
+        "GET",
+        "export/inventory",
+        200
     )
     
     # Clean up - delete test boxes

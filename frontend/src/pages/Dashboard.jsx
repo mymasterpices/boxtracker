@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { API } from "../App";
-import { Package, DollarSign, AlertTriangle, TrendingDown, RefreshCw } from "lucide-react";
+import { Package, DollarSign, AlertTriangle, TrendingDown, RefreshCw, Clock, Download } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
 import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 const Dashboard = ({ stats, boxes, loading, onRefresh }) => {
   const [trends, setTrends] = useState([]);
@@ -26,6 +27,28 @@ const Dashboard = ({ stats, boxes, loading, onRefresh }) => {
     fetchTrends();
   }, []);
 
+  const handleExport = async () => {
+    try {
+      const response = await axios.get(`${API}/export/inventory`, {
+        responseType: 'blob'
+      });
+      
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `inventory_${new Date().toISOString().split('T')[0]}.xlsx`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+      
+      toast.success("Inventory exported successfully");
+    } catch (error) {
+      console.error("Export error:", error);
+      toast.error("Failed to export inventory");
+    }
+  };
+
   if (loading) {
     return (
       <div className="animate-fade-in" data-testid="dashboard-loading">
@@ -38,6 +61,11 @@ const Dashboard = ({ stats, boxes, loading, onRefresh }) => {
       </div>
     );
   }
+
+  // Get boxes that will need reordering soon (based on predictions)
+  const boxesNeedingReorder = boxes.filter(b => 
+    b.prediction_status === "warning" && b.days_until_reorder !== null && b.days_until_reorder > 0
+  );
 
   const statCards = [
     {
@@ -73,25 +101,36 @@ const Dashboard = ({ stats, boxes, loading, onRefresh }) => {
   return (
     <div className="animate-fade-in" data-testid="dashboard">
       {/* Header */}
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex items-center justify-between mb-8 flex-wrap gap-4">
         <div>
           <h1 className="text-3xl font-bold text-foreground">Dashboard</h1>
           <p className="text-muted-foreground mt-1">Overview of your box inventory</p>
         </div>
-        <Button 
-          variant="outline" 
-          onClick={onRefresh}
-          className="btn-shadow rounded-none border-2 border-foreground"
-          data-testid="refresh-btn"
-        >
-          <RefreshCw className="w-4 h-4 mr-2" />
-          Refresh
-        </Button>
+        <div className="flex gap-3">
+          <Button 
+            variant="outline" 
+            onClick={handleExport}
+            className="btn-shadow rounded-none border-2 border-foreground"
+            data-testid="export-btn"
+          >
+            <Download className="w-4 h-4 mr-2" />
+            Export Excel
+          </Button>
+          <Button 
+            variant="outline" 
+            onClick={onRefresh}
+            className="btn-shadow rounded-none border-2 border-foreground"
+            data-testid="refresh-btn"
+          >
+            <RefreshCw className="w-4 h-4 mr-2" />
+            Refresh
+          </Button>
+        </div>
       </div>
 
       {/* Low Stock Alert */}
       {stats?.low_stock_count > 0 && (
-        <div className="alert-banner p-4 mb-8 animate-fade-in" data-testid="low-stock-alert">
+        <div className="alert-banner p-4 mb-6 animate-fade-in" data-testid="low-stock-alert">
           <div className="flex items-start gap-3">
             <AlertTriangle className="w-5 h-5 text-orange-600 mt-0.5" />
             <div className="flex-1">
@@ -117,6 +156,31 @@ const Dashboard = ({ stats, boxes, loading, onRefresh }) => {
               >
                 View Inventory →
               </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Prediction Alert - Boxes needing reorder soon */}
+      {boxesNeedingReorder.length > 0 && (
+        <div className="bg-amber-50 border-l-4 border-amber-500 p-4 mb-6 animate-fade-in" data-testid="reorder-prediction-alert">
+          <div className="flex items-start gap-3">
+            <Clock className="w-5 h-5 text-amber-600 mt-0.5" />
+            <div className="flex-1">
+              <h3 className="font-semibold text-amber-800">Reorder Prediction</h3>
+              <p className="text-sm text-amber-700 mt-1">
+                Based on your usage patterns, these items will need reordering soon:
+              </p>
+              <div className="flex flex-wrap gap-2 mt-3">
+                {boxesNeedingReorder.map((box) => (
+                  <span 
+                    key={box.id}
+                    className="px-3 py-1 bg-amber-200 text-amber-900 text-sm font-medium"
+                  >
+                    {box.name} (~{box.days_until_reorder} days)
+                  </span>
+                ))}
+              </div>
             </div>
           </div>
         </div>

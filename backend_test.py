@@ -54,6 +54,63 @@ class BoxInventoryAPITester:
             print(f"❌ Failed - Error: {str(e)}")
             return False, {}
 
+    def test_login(self, username, password):
+        """Test login and get token"""
+        success, response = self.run_test(
+            "User Login",
+            "POST",
+            "auth/login",
+            200,
+            data={"username": username, "password": password}
+        )
+        if success and 'token' in response:
+            self.token = response['token']
+            print(f"   🔑 Token obtained: {self.token[:20]}...")
+            return True
+        return False
+
+    def test_register(self, username, password):
+        """Test user registration"""
+        success, response = self.run_test(
+            "User Registration",
+            "POST",
+            "auth/register",
+            200,
+            data={"username": username, "password": password}
+        )
+        if success and 'token' in response:
+            self.token = response['token']
+            print(f"   🔑 Token obtained: {self.token[:20]}...")
+            return True
+        return False
+
+    def test_get_me(self):
+        """Test getting current user info"""
+        success, response = self.run_test(
+            "Get Current User",
+            "GET",
+            "auth/me",
+            200
+        )
+        return success
+
+    def test_protected_route_without_auth(self):
+        """Test that protected routes require authentication"""
+        # Temporarily remove token
+        temp_token = self.token
+        self.token = None
+        
+        success, response = self.run_test(
+            "Protected Route Without Auth",
+            "GET",
+            "boxes",
+            401  # Should return 401 Unauthorized
+        )
+        
+        # Restore token
+        self.token = temp_token
+        return success
+
     def test_root_endpoint(self):
         """Test root API endpoint"""
         success, response = self.run_test(

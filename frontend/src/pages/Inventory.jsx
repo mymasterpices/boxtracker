@@ -2,7 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 import { API } from "../App";
 import { toast } from "sonner";
-import { Plus, Pencil, Trash2, Package, Search, Download, Clock } from "lucide-react";
+import { Plus, Pencil, Trash2, Package, Search, Download, Clock, PackagePlus } from "lucide-react";
 import { Card, CardContent } from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
@@ -43,8 +43,11 @@ const Inventory = ({ boxes, onUpdate }) => {
   const [search, setSearch] = useState("");
   const [dialogOpen, setDialogOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [restockDialogOpen, setRestockDialogOpen] = useState(false);
   const [editingBox, setEditingBox] = useState(null);
   const [boxToDelete, setBoxToDelete] = useState(null);
+  const [boxToRestock, setBoxToRestock] = useState(null);
+  const [restockAmount, setRestockAmount] = useState(0);
   const [formData, setFormData] = useState({
     name: "",
     quantity: 0,

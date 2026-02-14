@@ -469,6 +469,64 @@ const Inventory = ({ boxes, onUpdate }) => {
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
+
+        {/* Quick Restock Dialog */}
+        <Dialog open={restockDialogOpen} onOpenChange={setRestockDialogOpen}>
+          <DialogContent className="rounded-none border-2 border-foreground sm:max-w-sm" data-testid="restock-dialog">
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2">
+                <PackagePlus className="w-5 h-5 text-emerald-600" />
+                Quick Restock
+              </DialogTitle>
+            </DialogHeader>
+            <div className="py-4">
+              <div className="bg-muted p-4 mb-4">
+                <p className="font-semibold">{boxToRestock?.name}</p>
+                <p className="text-sm text-muted-foreground">
+                  Current stock: <span className="font-mono font-medium">{boxToRestock?.quantity}</span>
+                </p>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="restockAmount">Add Quantity</Label>
+                <Input
+                  id="restockAmount"
+                  type="number"
+                  min="1"
+                  value={restockAmount || ""}
+                  onChange={(e) => setRestockAmount(parseInt(e.target.value) || 0)}
+                  placeholder="Enter quantity to add"
+                  className="rounded-none h-12"
+                  autoFocus
+                  data-testid="restock-amount-input"
+                />
+                {restockAmount > 0 && (
+                  <p className="text-sm text-emerald-600">
+                    New stock will be: <span className="font-mono font-medium">{(boxToRestock?.quantity || 0) + restockAmount}</span>
+                  </p>
+                )}
+              </div>
+            </div>
+            <DialogFooter>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setRestockDialogOpen(false)}
+                className="rounded-none border-2"
+                data-testid="restock-cancel-btn"
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={handleRestock}
+                disabled={saving || restockAmount <= 0}
+                className="btn-shadow rounded-none bg-emerald-600 hover:bg-emerald-700"
+                data-testid="restock-confirm-btn"
+              >
+                {saving ? "Adding..." : `Add ${restockAmount || 0} boxes`}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </div>
     </TooltipProvider>
   );

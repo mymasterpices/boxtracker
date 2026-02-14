@@ -36,10 +36,10 @@ class BoxType(BaseModel):
     created_at: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
 
 class BoxTypeCreate(BaseModel):
-    name: str
-    quantity: int = 0
-    cost: float = 0.0
-    min_threshold: int = 10
+    name: str = Field(..., min_length=1, max_length=200)
+    quantity: int = Field(default=0, ge=0)
+    cost: float = Field(default=0.0, ge=0)
+    min_threshold: int = Field(default=10, ge=0)
 
 class BoxTypeUpdate(BaseModel):
     name: Optional[str] = None

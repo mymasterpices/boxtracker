@@ -98,6 +98,35 @@ const Inventory = ({ boxes, onUpdate }) => {
     setDeleteDialogOpen(true);
   };
 
+  const openRestockDialog = (box) => {
+    setBoxToRestock(box);
+    setRestockAmount(0);
+    setRestockDialogOpen(true);
+  };
+
+  const handleRestock = async () => {
+    if (!boxToRestock || restockAmount <= 0) {
+      toast.error("Please enter a valid quantity");
+      return;
+    }
+
+    setSaving(true);
+    try {
+      const newQuantity = boxToRestock.quantity + restockAmount;
+      await axios.put(`${API}/boxes/${boxToRestock.id}`, { quantity: newQuantity });
+      toast.success(`Added ${restockAmount} to ${boxToRestock.name}`);
+      setRestockDialogOpen(false);
+      setBoxToRestock(null);
+      setRestockAmount(0);
+      onUpdate();
+    } catch (error) {
+      console.error("Error restocking:", error);
+      toast.error("Failed to restock");
+    } finally {
+      setSaving(false);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.name.trim()) {

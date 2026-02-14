@@ -313,6 +313,22 @@ const Inventory = ({ boxes, onUpdate }) => {
                           </TableCell>
                           <TableCell className="text-right">
                             <div className="flex justify-end gap-2">
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={() => openRestockDialog(box)}
+                                    className="h-8 w-8 p-0 text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50"
+                                    data-testid={`restock-btn-${box.id}`}
+                                  >
+                                    <PackagePlus className="w-4 h-4" />
+                                  </Button>
+                                </TooltipTrigger>
+                                <TooltipContent className="rounded-none">
+                                  Quick Restock
+                                </TooltipContent>
+                              </Tooltip>
                               <Button
                                 variant="ghost"
                                 size="sm"

@@ -1,34 +1,142 @@
-.App-logo {
-    height: 40vmin;
-    pointer-events: none;
+/* Main App Styles */
+.app-container {
+  min-height: 100vh;
+  display: flex;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-    .App-logo {
-        animation: App-logo-spin infinite 20s linear;
-    }
+/* Sidebar */
+.sidebar {
+  width: 240px;
+  background: #ffffff;
+  border-right: 1px solid #e2e8f0;
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  height: 100vh;
+  z-index: 40;
 }
 
-.App-header {
-    background-color: #0f0f10;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    font-size: calc(10px + 2vmin);
-    color: white;
+.sidebar-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 20px;
+  color: #64748b;
+  font-weight: 500;
+  transition:
+    background-color 0.15s,
+    color 0.15s,
+    border-left-color 0.15s;
+  border-left: 3px solid transparent;
 }
 
-.App-link {
-    color: #61dafb;
+.sidebar-nav-item:hover {
+  background: #f4f4f5;
+  color: #0f172a;
 }
 
-@keyframes App-logo-spin {
-    from {
-        transform: rotate(0deg);
-    }
-    to {
-        transform: rotate(360deg);
-    }
+.sidebar-nav-item.active {
+  background: #f4f4f5;
+  color: #1e1b4b;
+  border-left-color: #1e1b4b;
+}
+
+/* Main content area */
+.main-content {
+  flex: 1;
+  margin-left: 240px;
+  background: #f4f4f5;
+  min-height: 100vh;
+}
+
+/* Cards with hover effect */
+.card-hover {
+  transition:
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
+}
+
+.card-hover:hover {
+  box-shadow: 4px 4px 0px 0px #000000;
+  transform: translate(-2px, -2px);
+}
+
+/* Button shadows */
+.btn-shadow {
+  box-shadow: 2px 2px 0px 0px #000000;
+  transition:
+    box-shadow 0.15s,
+    transform 0.15s;
+}
+
+.btn-shadow:hover {
+  box-shadow: 3px 3px 0px 0px #000000;
+  transform: translate(-1px, -1px);
+}
+
+.btn-shadow:active {
+  box-shadow: 1px 1px 0px 0px #000000;
+  transform: translate(1px, 1px);
+}
+
+/* Form inputs */
+.input-sharp {
+  border-radius: 0 !important;
+  border: 1px solid #e2e8f0;
+  background: #f9fafb;
+  height: 48px;
+  transition:
+    border-color 0.15s,
+    box-shadow 0.15s;
+}
+
+.input-sharp:focus {
+  border-color: #1e1b4b;
+  box-shadow: 0 0 0 1px #1e1b4b;
+  outline: none;
+}
+
+/* Alert banner */
+.alert-banner {
+  border-left: 4px solid #f97316;
+  background: #fff7ed;
+}
+
+/* Stat cards */
+.stat-card {
+  background: white;
+  border: 1px solid #e2e8f0;
+  padding: 24px;
+}
+
+.stat-value {
+  font-family: "Manrope", sans-serif;
+  font-weight: 800;
+  font-size: 2.5rem;
+  line-height: 1;
+  color: #0f172a;
+}
+
+.stat-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #64748b;
+  margin-top: 8px;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .sidebar {
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+  }
+
+  .sidebar.open {
+    transform: translateX(0);
+  }
+
+  .main-content {
+    margin-left: 0;
+  }
 }

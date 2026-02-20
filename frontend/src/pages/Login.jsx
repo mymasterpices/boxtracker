@@ -9,13 +9,11 @@ import { Label } from "../components/ui/label";
 import { toast } from "sonner";
 
 const Login = () => {
-  const [isLogin, setIsLogin] = useState(true);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  const { login, register } = useAuth();
+  const { login } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -26,25 +24,10 @@ const Login = () => {
       return;
     }
 
-    if (!isLogin && password !== confirmPassword) {
-      toast.error("Passwords do not match");
-      return;
-    }
-
-    if (!isLogin && password.length < 6) {
-      toast.error("Password must be at least 6 characters");
-      return;
-    }
-
     setLoading(true);
     try {
-      if (isLogin) {
-        await login(username, password);
-        toast.success("Welcome back!");
-      } else {
-        await register(username, password);
-        toast.success("Account created successfully!");
-      }
+      await login(username, password);
+      toast.success("Welcome back!");
       navigate("/");
     } catch (error) {
       console.error("Auth error:", error);
@@ -71,13 +54,9 @@ const Login = () => {
 
         <Card className="rounded-none border-2 border-foreground shadow-[4px_4px_0px_0px_#000000]">
           <CardHeader className="text-center pb-4">
-            <CardTitle className="text-xl">
-              {isLogin ? "Welcome Back" : "Create Account"}
-            </CardTitle>
+            <CardTitle className="text-xl">Welcome Back</CardTitle>
             <CardDescription>
-              {isLogin 
-                ? "Sign in to manage your inventory" 
-                : "Register to start tracking your boxes"}
+              Sign in to manage your inventory
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -106,7 +85,7 @@ const Login = () => {
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="Enter password"
                     className="rounded-none h-12 pr-10"
-                    autoComplete={isLogin ? "current-password" : "new-password"}
+                    autoComplete="current-password"
                     data-testid="password-input"
                   />
                   <button
@@ -120,48 +99,15 @@ const Login = () => {
                 </div>
               </div>
 
-              {!isLogin && (
-                <div className="space-y-2">
-                  <Label htmlFor="confirmPassword">Confirm Password</Label>
-                  <Input
-                    id="confirmPassword"
-                    type={showPassword ? "text" : "password"}
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                    placeholder="Confirm password"
-                    className="rounded-none h-12"
-                    autoComplete="new-password"
-                    data-testid="confirm-password-input"
-                  />
-                </div>
-              )}
-
               <Button
                 type="submit"
                 disabled={loading}
                 className="w-full btn-shadow rounded-none bg-primary h-12 text-base"
                 data-testid="submit-btn"
               >
-                {loading ? "Please wait..." : isLogin ? "Sign In" : "Create Account"}
+                {loading ? "Please wait..." : "Sign In"}
               </Button>
             </form>
-
-            <div className="mt-6 text-center">
-              <button
-                type="button"
-                onClick={() => {
-                  setIsLogin(!isLogin);
-                  setPassword("");
-                  setConfirmPassword("");
-                }}
-                className="text-sm text-muted-foreground hover:text-primary transition-colors"
-                data-testid="toggle-auth-mode"
-              >
-                {isLogin 
-                  ? "Don't have an account? Register" 
-                  : "Already have an account? Sign in"}
-              </button>
-            </div>
           </CardContent>
         </Card>
       </div>

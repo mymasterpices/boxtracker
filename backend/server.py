@@ -1,8 +1,8 @@
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi import FastAPI, APIRouter, HTTPException, Depends
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from fastapi.responses import StreamingResponse
 from dotenv import load_dotenv
-from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
 import os
 import logging
@@ -89,30 +89,30 @@ async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(s
 
 # ==================== AUTH ENDPOINTS ====================
 
-@api_router.post("/auth/register", response_model=TokenResponse)
-async def register(user: UserCreate):
-    # Check if username exists
-    existing = await db.users.find_one({"username": user.username.lower()})
-    if existing:
-        raise HTTPException(status_code=400, detail="Username already taken")
+# @api_router.post("/auth/register", response_model=TokenResponse)
+# async def register(user: UserCreate):
+#     # Check if username exists
+#     existing = await db.users.find_one({"username": user.username.lower()})
+#     if existing:
+#         raise HTTPException(status_code=400, detail="Username already taken")
     
-    # Create user
-    user_id = str(uuid.uuid4())
-    user_doc = {
-        "id": user_id,
-        "username": user.username.lower(),
-        "password_hash": hash_password(user.password),
-        "created_at": datetime.now(timezone.utc).isoformat()
-    }
-    await db.users.insert_one(user_doc)
+#     # Create user
+#     user_id = str(uuid.uuid4())
+#     user_doc = {
+#         "id": user_id,
+#         "username": user.username.lower(),
+#         "password_hash": hash_password(user.password),
+#         "created_at": datetime.now(timezone.utc).isoformat()
+#     }
+#     await db.users.insert_one(user_doc)
     
-    # Generate token
-    token = create_token(user_id, user.username.lower())
+#     # Generate token
+#     token = create_token(user_id, user.username.lower())
     
-    return TokenResponse(
-        token=token,
-        user=UserResponse(id=user_id, username=user.username.lower(), created_at=user_doc["created_at"])
-    )
+#     return TokenResponse(
+#         token=token,
+#         user=UserResponse(id=user_id, username=user.username.lower(), created_at=user_doc["created_at"])
+#     )
 
 @api_router.post("/auth/login", response_model=TokenResponse)
 async def login(credentials: UserLogin):
@@ -490,12 +490,14 @@ async def export_inventory_excel(current_user: dict = Depends(get_current_user))
 # Include the router in the main app
 app.include_router(api_router)
 
+
+
 app.add_middleware(
     CORSMiddleware,
+    allow_origins=["*"],  # Allows any origin to bypass the 'localhost' vs '127.0.0.1' issue
     allow_credentials=True,
-    allow_origins=os.environ.get('CORS_ORIGINS', '*').split(','),
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["*"],  # Allows POST, OPTIONS, GET, etc.
+    allow_headers=["*"],  # This is the most important part for Axios!
 )
 
 # Configure logging

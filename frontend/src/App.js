@@ -1,30 +1,9 @@
-import {
-  useState,
-  useEffect,
-  useCallback,
-  createContext,
-  useContext,
-} from "react";
+import { useState, useEffect, useCallback, createContext, useContext } from "react";
 import "@/App.css";
-import {
-  BrowserRouter,
-  Routes,
-  Route,
-  NavLink,
-  useLocation,
-  Navigate,
-} from "react-router-dom";
+import { BrowserRouter, Routes, Route, NavLink, useLocation, Navigate } from "react-router-dom";
 import axios from "axios";
 import { Toaster, toast } from "sonner";
-import {
-  Package,
-  LayoutDashboard,
-  ClipboardList,
-  TrendingUp,
-  Menu,
-  LogOut,
-  User,
-} from "lucide-react";
+import { Package, LayoutDashboard, ClipboardList, TrendingUp, Menu, LogOut, User } from "lucide-react";
 
 // Pages
 import Dashboard from "./pages/Dashboard";
@@ -52,7 +31,7 @@ const AuthProvider = ({ children }) => {
       if (token) {
         try {
           const res = await axios.get(`${API}/auth/me`, {
-            headers: { Authorization: `Bearer ${token}` },
+            headers: { Authorization: `Bearer ${token}` }
           });
           setUser(res.data);
         } catch (error) {
@@ -76,10 +55,7 @@ const AuthProvider = ({ children }) => {
   };
 
   const register = async (username, password) => {
-    const res = await axios.post(`${API}/auth/register`, {
-      username,
-      password,
-    });
+    const res = await axios.post(`${API}/auth/register`, { username, password });
     localStorage.setItem("token", res.data.token);
     setToken(res.data.token);
     setUser(res.data.user);
@@ -104,8 +80,7 @@ const AuthProvider = ({ children }) => {
   }, [token]);
 
   return (
-    <AuthContext.Provider
-      value={{ user, token, login, register, logout, loading }}>
+    <AuthContext.Provider value={{ user, token, login, register, logout, loading }}>
       {children}
     </AuthContext.Provider>
   );
@@ -114,7 +89,7 @@ const AuthProvider = ({ children }) => {
 // Protected Route
 const ProtectedRoute = ({ children }) => {
   const { user, loading } = useAuth();
-
+  
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-muted">
@@ -125,11 +100,11 @@ const ProtectedRoute = ({ children }) => {
       </div>
     );
   }
-
+  
   if (!user) {
     return <Navigate to="/login" replace />;
   }
-
+  
   return children;
 };
 
@@ -149,47 +124,44 @@ const Sidebar = ({ isOpen, onClose }) => {
   return (
     <>
       {isOpen && (
-        <div
+        <div 
           className="fixed inset-0 bg-black/50 z-30 md:hidden"
           onClick={onClose}
           data-testid="sidebar-overlay"
         />
       )}
-
-      <aside
-        className={`sidebar ${isOpen ? "open" : ""}`}
-        data-testid="sidebar">
+      
+      <aside className={`sidebar ${isOpen ? 'open' : ''}`} data-testid="sidebar">
         <div className="p-6 border-b border-border">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-primary flex items-center justify-center">
               <Package className="w-5 h-5 text-white" />
             </div>
             <div>
-              <h1 className="text-lg font-bold text-foreground tracking-tight">
-                BoxTrack
-              </h1>
+              <h1 className="text-lg font-bold text-foreground tracking-tight">BoxTrack</h1>
               <p className="text-xs text-muted-foreground">Inventory Manager</p>
             </div>
           </div>
         </div>
-
+        
         <nav className="flex-1 py-4">
           {navItems.map((item) => (
             <NavLink
               key={item.path}
               to={item.path}
               end={item.path === "/"}
-              className={({ isActive }) =>
-                `sidebar-nav-item ${isActive ? "active" : ""}`
+              className={({ isActive }) => 
+                `sidebar-nav-item ${isActive ? 'active' : ''}`
               }
               onClick={onClose}
-              data-testid={`nav-${item.label.toLowerCase().replace(" ", "-")}`}>
+              data-testid={`nav-${item.label.toLowerCase().replace(' ', '-')}`}
+            >
               <item.icon className="w-5 h-5" />
               <span>{item.label}</span>
             </NavLink>
           ))}
         </nav>
-
+        
         <div className="p-4 border-t border-border">
           <div className="flex items-center gap-2 px-2 py-2 text-sm text-muted-foreground mb-2">
             <User className="w-4 h-4" />
@@ -198,7 +170,8 @@ const Sidebar = ({ isOpen, onClose }) => {
           <button
             onClick={logout}
             className="w-full flex items-center gap-2 px-2 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
-            data-testid="logout-btn">
+            data-testid="logout-btn"
+          >
             <LogOut className="w-4 h-4" />
             <span>Logout</span>
           </button>
@@ -211,13 +184,14 @@ const Sidebar = ({ isOpen, onClose }) => {
 // Mobile header
 const MobileHeader = ({ onMenuClick }) => {
   const { user } = useAuth();
-
+  
   return (
     <header className="md:hidden fixed top-0 left-0 right-0 h-14 bg-white border-b border-border z-20 flex items-center px-4">
-      <button
+      <button 
         onClick={onMenuClick}
         className="p-2 hover:bg-muted rounded"
-        data-testid="mobile-menu-btn">
+        data-testid="mobile-menu-btn"
+      >
         <Menu className="w-5 h-5" />
       </button>
       <div className="flex items-center gap-2 ml-3">
@@ -242,7 +216,7 @@ const AppContent = () => {
     try {
       const [boxesRes, statsRes] = await Promise.all([
         axios.get(`${API}/boxes`),
-        axios.get(`${API}/stats`),
+        axios.get(`${API}/stats`)
       ]);
       setBoxes(boxesRes.data);
       setStats(statsRes.data);
@@ -262,32 +236,43 @@ const AppContent = () => {
     <div className="app-container">
       <MobileHeader onMenuClick={() => setSidebarOpen(true)} />
       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
-
+      
       <main className="main-content pt-14 md:pt-0">
         <div className="p-6 md:p-8 lg:p-12 max-w-7xl">
           <Routes>
-            <Route
-              path="/"
+            <Route 
+              path="/" 
               element={
-                <Dashboard
-                  stats={stats}
-                  boxes={boxes}
+                <Dashboard 
+                  stats={stats} 
+                  boxes={boxes} 
                   loading={loading}
                   onRefresh={fetchData}
                 />
-              }
+              } 
             />
-            <Route
-              path="/inventory"
-              element={<Inventory boxes={boxes} onUpdate={fetchData} />}
-            />
-            <Route
-              path="/record-usage"
+            <Route 
+              path="/inventory" 
               element={
-                <RecordUsage boxes={boxes} onUsageRecorded={fetchData} />
-              }
+                <Inventory 
+                  boxes={boxes} 
+                  onUpdate={fetchData}
+                />
+              } 
             />
-            <Route path="/history" element={<UsageHistory />} />
+            <Route 
+              path="/record-usage" 
+              element={
+                <RecordUsage 
+                  boxes={boxes} 
+                  onUsageRecorded={fetchData}
+                />
+              } 
+            />
+            <Route 
+              path="/history" 
+              element={<UsageHistory />} 
+            />
           </Routes>
         </div>
       </main>
@@ -302,13 +287,13 @@ function App() {
         <Toaster position="top-right" richColors />
         <Routes>
           <Route path="/login" element={<Login />} />
-          <Route
-            path="/*"
+          <Route 
+            path="/*" 
             element={
               <ProtectedRoute>
                 <AppContent />
               </ProtectedRoute>
-            }
+            } 
           />
         </Routes>
       </AuthProvider>
